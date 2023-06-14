@@ -4,7 +4,7 @@ import { ApolloServer, gql } from "apollo-server";
 
 // nodemon을 사용하기 때문에 server.js를 저장할 때마다 nodemon이 서버가 재시작시킴
 
-const tweets = [
+let tweets = [
   {
     id: "1",
     text: "first one",
@@ -46,6 +46,23 @@ const resolvers = {
     // tweet(root, args) {
     tweet(root, { id }) {
       return tweets.find((tweet) => tweet.id === id);
+    },
+  },
+  Mutation: {
+    postTweet(_, { text, userId }) {
+      // root에 '_'를 기입하면 root를 무시하겠다는 의미
+      const newTweet = {
+        id: tweets.length + 1,
+        text,
+      };
+      tweets.push(newTweet);
+      return newTweet;
+    },
+    deleteTweet(_, { id }) {
+      const tweet = tweets.find((tweet) => tweet.id === id);
+      if (!tweet) return false;
+      tweets = tweets.filter((tweet) => tweet.id !== id);
+      return true;
     },
   },
 };
