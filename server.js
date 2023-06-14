@@ -15,11 +15,21 @@ let tweets = [
   },
 ];
 
+let users = [
+  {
+    id: "1",
+    firstName: "seungmin",
+    lastName: "lee",
+  },
+];
+
 // 유저가 사용하길 원하는 모든 것들은 type Query 안에 작성되어야 함
 const typeDefs = gql`
   type User {
     id: ID!
-    username: String!
+    firstName: String!
+    lastName: String!
+    fullName: String!
   }
   type Tweet {
     id: ID!
@@ -27,6 +37,7 @@ const typeDefs = gql`
     author: User
   }
   type Query {
+    allUsers: [User!]!
     allTweets: [Tweet!]!
     tweet(id: ID!): Tweet
   }
@@ -40,6 +51,9 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
+    allUsers() {
+      return users;
+    },
     allTweets() {
       return tweets;
     },
@@ -63,6 +77,14 @@ const resolvers = {
       if (!tweet) return false;
       tweets = tweets.filter((tweet) => tweet.id !== id);
       return true;
+    },
+  },
+  User: {
+    // 콘솔 찍어 확인해보면 resolver 순서가 allUsers -> fullName 순임
+    // allUsers를 들여다보고 fullName 확인 후 fullName resolver
+    // fullName(root) {
+    fullName({ firstName, lastName }) {
+      return `${firstName} ${lastName}`;
     },
   },
 };
