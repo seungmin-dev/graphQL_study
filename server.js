@@ -19,7 +19,13 @@ const typeDefs = gql`
     allTweets: [Tweet]
     tweet(id: ID): Tweet
   }
+  type Mutation {
+    postTweet(text: String, userId: ID): Tweet
+    deleteTweet(id: ID): Boolean
+  }
 `;
+// operation 작성할 때 default 는 query
+// mutation은 표기해줘야함
 
 const server = new ApolloServer({ typeDefs });
 
