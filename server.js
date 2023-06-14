@@ -7,21 +7,21 @@ import { ApolloServer, gql } from "apollo-server";
 // 유저가 사용하길 원하는 모든 것들은 type Query 안에 작성되어야 함
 const typeDefs = gql`
   type User {
-    id: ID
-    username: String
+    id: ID!
+    username: String!
   }
   type Tweet {
-    id: ID
-    text: String
-    author: User
+    id: ID!
+    text: String!
+    author: User!
   }
   type Query {
-    allTweets: [Tweet]
-    tweet(id: ID): Tweet
+    allTweets: [Tweet!]!
+    tweet(id: ID!): Tweet
   }
   type Mutation {
-    postTweet(text: String, userId: ID): Tweet
-    deleteTweet(id: ID): Boolean
+    postTweet(text: String!, userId: ID!): Tweet!
+    deleteTweet(id: ID!): Boolean!
   }
 `;
 // operation 작성할 때 default 는 query
