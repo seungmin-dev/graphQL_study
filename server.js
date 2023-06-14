@@ -6,9 +6,18 @@ import { ApolloServer, gql } from "apollo-server";
 
 // 유저가 사용하길 원하는 모든 것들은 type Query 안에 작성되어야 함
 const typeDefs = gql`
-  type Query {
+  type User {
+    id: ID
+    username: String
+  }
+  type Tweet {
+    id: ID
     text: String
-    hello: String
+    author: User
+  }
+  type Query {
+    allTweets: [Tweet]
+    tweet(id: ID): Tweet
   }
 `;
 
