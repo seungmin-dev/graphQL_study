@@ -1,4 +1,5 @@
 import { ApolloServer, gql } from "apollo-server";
+import { error } from "console";
 // package.json 하단에 "type":"module" 구문을 작성하지 않으면
 // require를 사용해서 import 하게 됨
 
@@ -8,10 +9,12 @@ let tweets = [
   {
     id: "1",
     text: "first one",
+    userId: "2",
   },
   {
     id: "2",
     text: "second one",
+    userId: "1",
   },
 ];
 
@@ -65,9 +68,15 @@ const resolvers = {
   Mutation: {
     postTweet(_, { text, userId }) {
       // root에 '_'를 기입하면 root를 무시하겠다는 의미
+      const user = users.find((user) => user.id === userId);
+      if (!user) {
+        throw error("유저아이디가 존재하지 않습니다");
+        return false;
+      }
       const newTweet = {
         id: tweets.length + 1,
         text,
+        author: user,
       };
       tweets.push(newTweet);
       return newTweet;
@@ -85,6 +94,11 @@ const resolvers = {
     // fullName(root) {
     fullName({ firstName, lastName }) {
       return `${firstName} ${lastName}`;
+    },
+  },
+  Tweet: {
+    author({ userId }) {
+      return users.find((user) => user.id === userId);
     },
   },
 };
